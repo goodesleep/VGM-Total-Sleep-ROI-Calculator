@@ -388,6 +388,12 @@ function buildReport(){
 
 function exportPDF(){
   buildReport();
+  var name=($("i_client").value||"").trim();
+  var fname=('Total Sleep Services ROI'+(name?' - '+name:'')).replace(/[\\/:*?"<>|]+/g,' ').replace(/\s+/g,' ').trim();
+  var prevTitle=document.title;
+  document.title=fname;
+  var restore=function(){ document.title=prevTitle; window.removeEventListener('afterprint',restore); };
+  window.addEventListener('afterprint',restore);
   window.print();
 }
 
