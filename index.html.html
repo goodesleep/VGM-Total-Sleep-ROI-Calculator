@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanusom ROI Calculator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#1a1a2e;color:#1E293B;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
+.wrap{width:100%;max-width:980px;background:#F8FAFC;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.header{background:linear-gradient(135deg,#1E2A5E 0%,#2E3F96 40%,#4A6CF7 100%);padding:28px 36px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.title{font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;}
+.sub{font-size:12px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.5);font-weight:500;margin-top:2px;}
+.brand{display:flex;flex-direction:column;align-items:flex-start;gap:10px;}
+.ts-card{background:#fff;border-radius:12px;padding:11px 18px;box-shadow:0 4px 14px rgba(0,0,0,0.22);display:flex;align-items:center;}
+.powered{display:flex;align-items:center;gap:9px;padding-left:3px;font-size:15px;font-weight:500;color:rgba(255,255,255,0.62);letter-spacing:0.2px;}
+.powered .pw{font-style:italic;}
+.powered .ck{flex:0 0 auto;}
+.powered .sanusom-word{color:#fff;font-weight:800;font-size:19px;letter-spacing:-0.2px;}
+.hgt{text-align:left;font-size:22px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:3px;text-transform:uppercase;line-height:1;padding:0 0 3px 4px;align-self:flex-end;margin-right:auto;}
+.body{padding:28px 36px;}
+.sec-lbl{font-size:11px;font-weight:700;color:#3B51C4;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;}
+.inputs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.inp{display:flex;flex-direction:column;gap:6px;position:relative;}
+.inp label{font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1.5px;min-height:42px;display:flex;align-items:flex-end;}
+.inp .iw{position:relative;}
+.inp .iw input{width:100%;padding-right:30px;}
+.inp .iw .sfx{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:700;color:#94A3B8;pointer-events:none;}
+.inp .iw .pfx{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:700;color:#94A3B8;pointer-events:none;}
+.inp .iw input.has-pfx{padding-left:24px;}
+.inp input{padding:10px 12px;border:1px solid #E2E8F0;border-radius:10px;font-size:16px;font-weight:700;color:#5A6FB8;font-family:'Inter',sans-serif;background:#fff;outline:none;width:100%;}
+.inp input:focus{border-color:#818CF8;box-shadow:0 0 0 3px rgba(74,108,247,0.1);}
+.staff{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;}
+.staff .grp{flex:1;min-width:220px;}
+.toggle{display:inline-flex;background:#EEF2FF;border-radius:10px;padding:4px;gap:4px;margin-top:6px;}
+.toggle button{border:none;background:transparent;padding:8px 16px;border-radius:8px;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:#3B51C4;cursor:pointer;letter-spacing:0.5px;}
+.toggle button.on{background:#2E3F96;color:#fff;}
+.staff .computed{font-size:11px;color:#94A3B8;font-weight:600;margin-top:6px;min-height:14px;}
+.tbl{background:#fff;border:1px solid #E2E8F0;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04);margin-bottom:16px;}
+.t-hdr{padding:12px 20px;background:#EEF2FF;border-bottom:1px solid #C7D2FE;font-size:12px;font-weight:700;color:#3B51C4;text-transform:uppercase;letter-spacing:2px;}
+.t-cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;padding:10px 20px 6px;border-bottom:1px solid #E2E8F0;}
+.t-cols div:not(:first-child){text-align:right;}
+.t-row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;padding:8px 20px;font-size:14px;color:#475569;border-bottom:1px solid #E2E8F0;}
+.t-row.hi{background:#EEF2FF;}
+.t-row .lb{font-weight:600;}
+.t-row .lb span{font-size:11px;color:#94A3B8;font-weight:500;}
+.t-row .v{text-align:right;color:#c2410c;}
+.t-row .vs{text-align:right;font-weight:600;color:#15803d;}
+.t-row .vg{text-align:right;font-weight:700;color:#2E3F96;}
+.t-row.tot{padding:10px 20px;background:#EEF2FF;font-weight:700;color:#2E3F96;}
+.t-row.tot .v{color:#9a3412;}
+.t-row.tot .vs{color:#166534;}
+.t-row.tot .vg{font-size:16px;}
+.cost-row{display:grid;grid-template-columns:1.4fr 1fr;padding:8px 20px;font-size:14px;color:#475569;border-bottom:1px solid #E2E8F0;}
+.cost-row .v{text-align:right;font-weight:600;color:#475569;}
+.cost-row.tot{background:#EEF2FF;font-weight:700;color:#2E3F96;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.sum{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:16px;align-items:stretch;margin-bottom:16px;}
+.sb{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:16px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.sb .tp{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:2px;}
+.sb .bg{font-size:28px;font-weight:900;color:#2E3F96;margin-top:6px;}
+.sb .sm{font-size:11px;color:#94A3B8;margin-top:2px;font-weight:500;}
+.ab{background:#16a34a;color:#fff;border-radius:14px;padding:16px 28px;text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.ab .tp{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;opacity:0.7;}
+.ab .bg{font-size:38px;font-weight:900;line-height:1.15;}
+.ab .sm{font-size:11px;opacity:0.75;margin-top:2px;}
+.ab.neg{background:#c2410c;}
+details.assump{background:#fff;border:1px solid #E2E8F0;border-radius:14px;margin-bottom:16px;overflow:hidden;}
+details.assump summary{padding:12px 20px;font-size:12px;font-weight:700;color:#3B51C4;text-transform:uppercase;letter-spacing:2px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+details.assump summary::after{content:"+";font-size:18px;color:#94A3B8;}
+details.assump[open] summary::after{content:"\2212";}
+details.assump .agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:4px 20px 18px;}
+details.assump .agrid .inp label{flex-grow:1;}
+.foot{font-size:10px;color:#94A3B8;line-height:1.5;}
+@media(max-width:760px){
+  .inputs{grid-template-columns:1fr 1fr;gap:12px;}
+  .sum{grid-template-columns:1fr;gap:12px;}
+  .two-col{grid-template-columns:1fr;}
+  details.assump .agrid{grid-template-columns:1fr 1fr;}
+  .body{padding:20px 18px;}
+  .header{padding:20px 18px;}
+  .title{font-size:24px;}
+  .hgt{font-size:18px;letter-spacing:2px;flex-basis:100%;text-align:left;padding:8px 0 0;align-self:auto;}
+  .ts-card img{height:60px;}
+  .t-row,.t-cols{font-size:12px;padding-left:12px;padding-right:12px;}
+  .ab .bg{font-size:28px;}
+}
+.pdfbtn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.4);border-radius:10px;padding:9px 15px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.3px;cursor:pointer;white-space:nowrap;transition:background .15s;}
+.pdfbtn:hover{background:rgba(255,255,255,0.28);}
+.hbtns{display:flex;gap:10px;margin-left:auto;}
+.hbtns .pdfbtn{margin-left:0;}
+.clientbar{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
+.clientbar label{font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1.5px;}
+.clientbar input{width:100%;padding:11px 14px;border:1px solid #E2E8F0;border-radius:10px;font-size:16px;font-weight:700;color:#5A6FB8;font-family:'Inter',sans-serif;background:#fff;outline:none;}
+.clientbar input:focus{border-color:#818CF8;box-shadow:0 0 0 3px rgba(74,108,247,0.1);}
+.report{display:none;}
+.rp-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2.5px solid #2E3F96;padding-bottom:9px;margin-bottom:2px;}
+.rp-logo{height:44px;width:auto;display:block;}
+.rp-head-right{text-align:right;}
+.rp-head-left{display:flex;flex-direction:column;align-items:flex-start;gap:7px;}
+.rp-title{font-size:21px;font-weight:900;color:#1E2A5E;letter-spacing:-0.5px;line-height:1;}
+.rp-client{font-size:15px;font-weight:800;color:#1E2A5E;display:block;margin-top:1px;}
+.rp-preparedfor{margin-top:7px;}
+.pf-label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:1.6px;color:#94A3B8;font-weight:700;}
+.rp-poweredby{font-size:11px;color:#64748B;font-weight:600;}
+.rp-date{font-size:10px;color:#94A3B8;margin-top:1px;}
+.rp-sec{font-size:10.5px;font-weight:800;color:#2E3F96;text-transform:uppercase;letter-spacing:1.2px;margin:11px 0 4px;}
+.rp-kv{width:100%;border-collapse:collapse;font-size:11.5px;}
+.rp-kv td{padding:3px 2px;border-bottom:1px solid #E2E8F0;vertical-align:top;}
+.rp-kv td:first-child{color:#64748B;font-weight:600;width:42%;}
+.rp-kv td:last-child{font-weight:700;color:#1E293B;text-align:right;}
+.rp-tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
+.rp-tbl th{background:#EEF2FF;color:#3B51C4;font-size:9px;text-transform:uppercase;letter-spacing:0.8px;padding:4px 8px;text-align:right;border-bottom:1px solid #C7D2FE;font-weight:700;}
+.rp-tbl th:first-child{text-align:left;}
+.rp-tbl td{padding:3.5px 8px;border-bottom:1px solid #E2E8F0;text-align:right;color:#475569;}
+.rp-tbl td:first-child{text-align:left;font-weight:600;color:#334155;}
+.rp-tbl td.pos{color:#15803d;font-weight:700;}
+.rp-tbl tr.rp-tot td{background:#EEF2FF;font-weight:800;color:#1E2A5E;font-size:12.5px;}
+.rp-metrics{display:flex;gap:12px;margin:6px 0 2px;}
+.rp-metric{flex:1;border:1px solid #E2E8F0;border-radius:9px;padding:9px;text-align:center;}
+.rp-metric .l{font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:#94A3B8;font-weight:700;}
+.rp-metric .n{font-size:22px;font-weight:900;margin-top:3px;color:#1E2A5E;line-height:1.05;}
+.rp-metric .s{font-size:9px;color:#94A3B8;margin-top:2px;}
+.rp-metric.hl{background:#16a34a;border-color:#16a34a;}
+.rp-metric.hl .l,.rp-metric.hl .n,.rp-metric.hl .s{color:#fff;}
+.rp-metric.hl .l,.rp-metric.hl .s{opacity:0.85;}
+.rp-foot{font-size:8.5px;color:#94A3B8;margin-top:11px;border-top:1px solid #E2E8F0;padding-top:7px;line-height:1.5;}
+@media print{
+  @page{margin:11mm;}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+  body{background:#fff !important;padding:0 !important;display:block !important;min-height:0 !important;}
+  .wrap{display:none !important;}
+  .report{display:block !important;}
+  .rp-head,.rp-kv,.rp-tbl,.rp-metrics,.rp-metric{break-inside:avoid;page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="brand">
+      <div class="ts-card">
+      <img src="data:image/png;base64,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" alt="Total Sleep Services" style="height:78px;width:auto;display:block;">
+      </div>
+      <div class="powered"><span class="pw">powered by</span><svg class="ck" width="22" height="22" viewBox="0 0 70 70" fill="none"><circle cx="35" cy="35" r="32" stroke="rgba(255,255,255,0.5)" stroke-width="4.5" fill="rgba(255,255,255,0.10)"/><path d="M20 36 L30 46 L50 26" stroke="#fff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="sanusom-word">Sanusom</span></div>
+    </div>
+    <div class="hgt">ROI Calculator</div>
+    <div class="hbtns">
+      <button class="pdfbtn" onclick="saveFile()" title="Download this file with the client name and current inputs"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Save File</button>
+      <button class="pdfbtn" onclick="exportPDF()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>Export PDF</button>
+    </div>
+  </div>
+  <div class="body">
+
+    <div class="clientbar">
+      <label for="i_client">Client / DME Name</label>
+      <input type="text" id="i_client" placeholder="e.g., Acme Home Medical, LLC" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="sec-lbl">Client Inputs</div>
+    <div class="inputs">
+      <div class="inp"><label>90-Day Compliance % <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#94A3B8;">(excluding RePAPs)</span></label><div class="iw"><input type="number" id="i_c90" value="73" min="1" max="99" step="0.1"><span class="sfx">%</span></div></div>
+      <div class="inp"><label>Avg. Resupply Revenue Per Order</label><div class="iw"><span class="pfx">$</span><input type="number" id="i_rr" value="220" class="has-pfx"></div></div>
+      <div class="inp"><label>Avg. Setups Per Month</label><input type="number" id="i_su" value="250"></div>
+      <div class="inp"><label>Avg. Revenue Per Machine <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#94A3B8;">(compliant pt, full term)</span></label><div class="iw"><span class="pfx">$</span><input type="number" id="i_mr" value="950" class="has-pfx"></div><div class="computed" id="mrNote" style="font-size:10px;color:#94A3B8;font-weight:600;"></div></div>
+    </div>
+
+    <div class="sec-lbl">Resupply Order History <span style="color:#94A3B8;font-weight:600;letter-spacing:1px;text-transform:none;">&mdash; % of set-up patients ordering, from Ad Hoc Sales Order Report</span></div>
+    <div class="staff" style="align-items:flex-start;">
+      <div class="grp" style="flex:0 0 auto;min-width:200px;">
+        <label style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1.5px;min-height:42px;display:flex;align-items:flex-end;">Data Source</label>
+        <div class="toggle">
+          <button id="tg_hist" onclick="setSrc('hist')">Client Order History</button>
+          <button id="tg_avg" class="on" onclick="setSrc('avg')">Industry Averages</button>
+        </div>
+        <div class="computed" id="srcNote">Scaled to the client's 90-day compliance.</div>
+      </div>
+      <div class="grp" id="grp_hist" style="flex:1;display:none;">
+        <div class="inputs" style="grid-template-columns:repeat(3,1fr);margin-bottom:0;">
+          <div class="inp"><label>Ordering in Months 4&ndash;6</label><div class="iw"><input type="number" id="i_o1" value="48.95" step="0.1" min="0" max="100"><span class="sfx">%</span></div><div class="computed" id="pc1" style="font-size:10px;color:#94A3B8;font-weight:600;"></div></div>
+          <div class="inp"><label>Ordering in Months 7&ndash;9</label><div class="iw"><input type="number" id="i_o2" value="40.94" step="0.1" min="0" max="100"><span class="sfx">%</span></div><div class="computed" id="pc2" style="font-size:10px;color:#94A3B8;font-weight:600;"></div></div>
+          <div class="inp"><label>Ordering in Months 10&ndash;12</label><div class="iw"><input type="number" id="i_o3" value="37.38" step="0.1" min="0" max="100"><span class="sfx">%</span></div><div class="computed" id="pc3" style="font-size:10px;color:#94A3B8;font-weight:600;"></div></div>
+        </div>
+      </div>
+      <div class="grp" id="grp_avg" style="flex:1;">
+        <label style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1.5px;min-height:42px;display:flex;align-items:flex-end;">Predicted DME Compliance</label>
+        <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:12px 16px;font-size:12px;color:#3B51C4;font-weight:600;line-height:1.7;margin-top:6px;" id="avgBox"></div>
+      </div>
+    </div>
+
+    <div class="sec-lbl">Current Compliance Staffing</div>
+    <div class="staff" style="align-items:flex-start;">
+      <div class="grp" style="flex:0 0 auto;min-width:200px;">
+        <label style="font-size:11px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1.5px;min-height:42px;display:flex;align-items:flex-end;">Staffing Model</label>
+        <div class="toggle">
+          <button id="tg_out" onclick="setMode('out')">Outsourced</button>
+          <button id="tg_fte" class="on" onclick="setMode('fte')">In-House (FTE)</button>
+        </div>
+        <div class="computed" id="modeNote">Monthly staffing cost &divide; monthly setups = cost per patient.</div>
+      </div>
+      <div class="grp inp" id="grp_out" style="display:none;">
+        <label>Current Staffing Cost Per Patient (90 Days)</label>
+        <div class="iw"><span class="pfx">$</span><input type="number" id="i_spp" value="30" class="has-pfx"></div>
+      </div>
+      <div class="grp inp" id="grp_fte">
+        <label>Total Compliance Staffing Cost (FTEs)</label>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <div class="iw" style="flex:1;min-width:120px;"><span class="pfx">$</span><input type="number" id="i_fte" value="7500" class="has-pfx"></div>
+          <div class="toggle" style="margin-top:0;flex:0 0 auto;">
+            <button id="tg_mo" class="on" onclick="setPeriod('mo')">Monthly</button>
+            <button id="tg_yr" onclick="setPeriod('yr')">Annual</button>
+          </div>
+        </div>
+        <div class="computed" id="ftePP"></div>
+      </div>
+    </div>
+
+    <details class="assump">
+      <summary>Model Assumptions &amp; Machine Payment Detail</summary>
+      <div class="agrid">
+        <div class="inp"><label>Total Sleep Services 90-Day Compliance Lift</label><div class="iw"><input type="number" id="a_gain" value="13.42" step="0.1"><span class="sfx">%</span></div></div>
+        <div class="inp"><label>Gross Margin on Increased Revenue</label><div class="iw"><input type="number" id="a_gm" value="50" min="1" max="100"><span class="sfx">%</span></div></div>
+        <div class="inp"><label>Total Sleep Services Cost First 90 Days / Pt</label><div class="iw"><span class="pfx">$</span><input type="number" id="a_c1" value="35" class="has-pfx"></div></div>
+        <div class="inp"><label>Total Sleep Services Rate Remaining 90 Days / Pt <span style="text-transform:none;letter-spacing:0;">(&times; compliance)</span></label><div class="iw"><span class="pfx">$</span><input type="number" id="a_c2" value="25" class="has-pfx"></div></div>
+        <div class="inp"><label>Machine Revenue At-Risk After Mo&nbsp;3 <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#94A3B8;">(adherence-contingent)</span></label><div class="iw"><input type="number" id="a_risk" value="77" min="0" max="100" step="1"><span class="sfx">%</span></div></div>
+        <div class="inp"><label>Compliance Prediction Factor <span style="text-transform:none;letter-spacing:0;">(ordering % &divide; factor)</span></label><div class="iw"><input type="number" id="a_pf" value="0.89" step="0.01" min="0.5" max="1"></div></div>
+      </div>
+    </details>
+
+    <div class="tbl">
+      <div class="t-hdr">Compliance Curve <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#94A3B8;">&mdash; % of set-up patients compliant</span></div>
+      <div class="t-cols"><div></div><div>DME Predicted</div><div>With Total Sleep</div><div>Gain</div></div>
+      <div class="t-row hi"><div class="lb">90-Day Compliance</div><div class="v" id="c90d"></div><div class="vs" id="c90s"></div><div class="vg" id="c90g"></div></div>
+      <div class="t-row"><div class="lb">180-Day Compliance</div><div class="v" id="cc1d"></div><div class="vs" id="cc1s"></div><div class="vg" id="cc1g"></div></div>
+      <div class="t-row"><div class="lb">270-Day Compliance</div><div class="v" id="cc2d"></div><div class="vs" id="cc2s"></div><div class="vg" id="cc2g"></div></div>
+      <div class="t-row"><div class="lb">One-Year Compliance</div><div class="v" id="cc3d"></div><div class="vs" id="cc3s"></div><div class="vg" id="cc3g"></div></div>
+    </div>
+
+    <div class="tbl">
+      <div class="t-hdr">Incremental Revenue Per Set-Up Patient <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#94A3B8;">&mdash; driven by the compliance curve above</span></div>
+      <div class="t-cols"><div></div><div>DME</div><div>With Total Sleep</div><div>Increase / Pt</div></div>
+      <div class="t-row hi"><div class="lb">Machine Revenue <span id="mSplit"></span></div><div class="v" id="m_d"></div><div class="vs" id="m_s"></div><div class="vg" id="m_g"></div></div>
+      <div class="t-row"><div class="lb">Resupply Rev &mdash; Mo 4&ndash;6</div><div class="v" id="r1d"></div><div class="vs" id="r1s"></div><div class="vg" id="r1g"></div></div>
+      <div class="t-row"><div class="lb">Resupply Rev &mdash; Mo 7&ndash;9</div><div class="v" id="r2d"></div><div class="vs" id="r2s"></div><div class="vg" id="r2g"></div></div>
+      <div class="t-row"><div class="lb">Resupply Rev &mdash; Mo 10&ndash;12</div><div class="v" id="r3d"></div><div class="vs" id="r3s"></div><div class="vg" id="r3g"></div></div>
+      <div class="t-row tot"><div class="lb">Total Increased Revenue / Set-Up Pt</div><div class="v"></div><div class="vs"></div><div class="vg" id="totg"></div></div>
+      <div class="t-row tot" style="background:#fff;"><div class="lb">Gain in Gross Profit <span id="gmLbl"></span></div><div class="v"></div><div class="vs"></div><div class="vg" id="gpg"></div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="tbl" style="margin-bottom:0;">
+        <div class="t-hdr">Cost Per Patient (First Year)</div>
+        <div class="cost-row"><div class="lb">First 90 Days</div><div class="v" id="cs1"></div></div>
+        <div class="cost-row"><div class="lb">Remaining 90 Days <span id="csNote" style="font-size:11px;color:#94A3B8;"></span></div><div class="v" id="cs2"></div></div>
+        <div class="cost-row"><div class="lb">Less: Current Staffing Cost / Pt</div><div class="v" id="cst" style="color:#15803d;"></div></div>
+        <div class="cost-row tot"><div class="lb">Net Incremental Cost / Pt</div><div class="v" id="cnet"></div></div>
+      </div>
+      <div class="tbl" style="margin-bottom:0;">
+        <div class="t-hdr">Annual Volume</div>
+        <div class="cost-row"><div class="lb">Setups Per Month</div><div class="v" id="vm"></div></div>
+        <div class="cost-row"><div class="lb">Annual Set-Up Patients</div><div class="v" id="vy"></div></div>
+        <div class="cost-row"><div class="lb">Gross Profit Gain &times; Annual Patients</div><div class="v" id="vgp"></div></div>
+        <div class="cost-row tot"><div class="lb">Net Incremental Cost &times; Annual Patients</div><div class="v" id="vnc"></div></div>
+      </div>
+    </div>
+
+    <div class="sum">
+      <div class="sb">
+        <div class="tp">Gross Profit Gain / Pt</div>
+        <div class="bg" id="s_gp"></div>
+        <div class="sm">on increased revenue</div>
+      </div>
+      <div class="sb">
+        <div class="tp">ROI</div>
+        <div class="bg" id="s_roi"></div>
+        <div class="sm">gross profit &divide; net incremental cost</div>
+      </div>
+      <div class="ab" id="npBox">
+        <div class="tp">Increase in Net Profit &mdash; Year 1</div>
+        <div class="bg" id="s_np"></div>
+        <div class="sm" id="s_npm"></div>
+      </div>
+    </div>
+
+    <div class="foot">* 90-day compliance comes from the machine manufacturer's report. With order history, DME compliance at 180 / 270 / 365 days is predicted from the client's actual ordering rates (Ad Hoc Sales Order History Report) &divide; 0.89, a factor derived from analysis across many client datasets. Without order history, industry-average compliance (55% / 46% / 42% at a 73% 90-day baseline) is scaled proportionally to the client's 90-day compliance.</div>
+    <div class="foot" style="margin-top:4px;">** Sanusom compliance curve, adherence, and retention improvements are based on historical averages across Sanusom partner DMEs. Sanusom software cost is included in the VGM fee.</div>
+    <div class="foot" style="margin-top:4px;">*** Machine revenue is the average allowable <b>collected for a compliant patient</b> over the full rental term (enter what a machine pays out when adherence is met &mdash; not blended actuals, which already bake in denials). The portion earned after month 3 is treated as at-risk (contingent on documented adherence); the compliance uplift is applied only to that share. Revenue paid upfront or otherwise guaranteed regardless of adherence should be reflected by lowering the at-risk %. Default 77% mirrors the historical study split &mdash; lower it for payer mixes with more upfront-pay or shorter-term plans.</div>
+  </div>
+</div>
+<div class="report" id="report"></div>
+<script>
+// ---- Study constants (from Excel model) ----
+var SAN_RETAIN = [0.70/0.83, 0.63/0.83, 0.60/0.83]; // Sanusom 180/270/365 retention vs. its 90-day
+var IND_C90 = 0.73;                                  // industry-average 90-day compliance
+var IND = [0.55, 0.46, 0.42];                        // industry-average 180/270/365 compliance at 73%
+
+var mode = 'fte';
+var src = 'avg';
+var period = 'mo';
+function $(id){return document.getElementById(id);}
+
+function setSrc(s){
+  src=s;
+  $("tg_hist").className = s==='hist'?'on':'';
+  $("tg_avg").className = s==='avg'?'on':'';
+  $("grp_hist").style.display = s==='hist'?'':'none';
+  $("grp_avg").style.display = s==='avg'?'':'none';
+  $("srcNote").textContent = s==='hist'
+    ? "From the client's order report."
+    : "Scaled to the client's 90-day compliance.";
+  run();
+}
+function fm(n){var s = n<0?"-":""; n=Math.abs(n); return s+"$"+(Math.round(n*100)/100).toLocaleString(undefined,{maximumFractionDigits:0});}
+function fm2(n){var s=n<0?"-":""; n=Math.abs(n); return s+"$"+n.toFixed(2);}
+function fM(n){var s=n<0?"-":""; n=Math.abs(n); if(n>=1e6)return s+"$"+(n/1e6).toFixed(2)+"M"; if(n>=1e3)return s+"$"+Math.round(n/1e3).toLocaleString()+"K"; return s+fm(n);}
+function pc(n){return (n*100).toFixed(0)+"%";}
+function cap(v,hi){return Math.min(v,hi);}
+
+function buildReport(){
+  var g=function(id){var e=$(id);return e?e.textContent:"";};
+  var v=function(id){var e=$(id);return e?e.value:"";};
+  function row(a,b){return "<tr><td>"+a+"</td><td>"+b+"</td></tr>";}
+  function tr(label,d,s,inc,tot){
+    return "<tr"+(tot?" class='rp-tot'":"")+"><td>"+label+"</td><td>"+d+"</td><td>"+s+"</td><td class='pos'>"+inc+"</td></tr>";
+  }
+  var dt=new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  var client=(v("i_client")||"").trim().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  var logoImg=document.querySelector('.ts-card img');
+  var logoSrc=logoImg?logoImg.src:"";
+
+  var srcTxt = src==='hist'
+    ? "Client order history &mdash; ordering "+v("i_o1")+"% / "+v("i_o2")+"% / "+v("i_o3")+"% (mo 4\u20136 / 7\u20139 / 10\u201312)"
+    : "Industry averages, scaled to the client's 90-day compliance";
+  var staffPPtxt = g("ftePP").replace(/^=\s*/,"");
+  var staffTxt = mode==='out'
+    ? "Outsourced &mdash; $"+v("i_spp")+" / patient (first 90 days)"
+    : "In-house &mdash; $"+Number(v("i_fte")||0).toLocaleString()+" / "+(period==='yr'?"year":"month")+(staffPPtxt?" ("+staffPPtxt+")":"");
+
+  var inputs =
+    row("90-Day Compliance (excl. RePAPs)", v("i_c90")+"%")+
+    row("Avg. Resupply Revenue / Order", "$"+v("i_rr"))+
+    row("Avg. Setups / Month", v("i_su"))+
+    row("Avg. Revenue / Machine", "$"+v("i_mr"))+
+    row("Compliance Data Source", srcTxt)+
+    row("Current Compliance Staffing", staffTxt);
+
+  var comp =
+    tr("90-Day Compliance", g("c90d"), g("c90s"), g("c90g"))+
+    tr("180-Day Compliance", g("cc1d"), g("cc1s"), g("cc1g"))+
+    tr("270-Day Compliance", g("cc2d"), g("cc2s"), g("cc2g"))+
+    tr("One-Year Compliance", g("cc3d"), g("cc3s"), g("cc3g"));
+
+  var rev =
+    tr("Machine Revenue", g("m_d"), g("m_s"), g("m_g"))+
+    tr("Resupply Rev &mdash; Mo 4\u20136", g("r1d"), g("r1s"), g("r1g"))+
+    tr("Resupply Rev &mdash; Mo 7\u20139", g("r2d"), g("r2s"), g("r2g"))+
+    tr("Resupply Rev &mdash; Mo 10\u201312", g("r3d"), g("r3s"), g("r3g"))+
+    "<tr class='rp-tot'><td>Total Increased Revenue / Set-Up Pt</td><td></td><td></td><td>"+g("totg")+"</td></tr>";
+
+  var econ =
+    row("Total Sleep Services Cost &mdash; First 90 Days", g("cs1"))+
+    row("Total Sleep Services Cost &mdash; Remaining 90 Days", g("cs2"))+
+    row("Less: Current Staffing Cost / Pt", g("cst"))+
+    row("<b>Net Incremental Cost / Pt</b>", "<b>"+g("cnet")+"</b>")+
+    row("Annual Set-Up Patients", g("vy"));
+
+  var foot="<b>Assumptions:</b> 90-day compliance lift "+v("a_gain")+"% &middot; machine revenue at-risk after mo 3 "+v("a_risk")+"% &middot; gross margin "+v("a_gm")+"% &middot; Total Sleep Services cost $"+v("a_c1")+" first 90 days, $"+v("a_c2")+"/pt &times; compliance thereafter &middot; compliance prediction factor "+v("a_pf")+". Compliance, adherence, and retention improvements are based on historical averages across Sanusom partner DMEs. All figures are per set-up patient unless noted.";
+
+  $("report").innerHTML =
+    "<div class='rp-head'>"+
+      "<div class='rp-head-left'>"+
+        (logoSrc?"<img class='rp-logo' src='"+logoSrc+"' alt='Total Sleep Services'>":"")+
+        "<div class='rp-poweredby'>powered by Sanusom</div>"+
+      "</div>"+
+      "<div class='rp-head-right'><div class='rp-title'>ROI Analysis</div>"+(client?"<div class='rp-preparedfor'><span class='pf-label'>Prepared for</span><span class='rp-client'>"+client+"</span></div>":"")+"<div class='rp-date'>"+dt+"</div></div>"+
+    "</div>"+
+    "<div class='rp-sec'>Client Inputs</div><table class='rp-kv'>"+inputs+"</table>"+
+    "<div class='rp-sec'>Compliance Curve</div><table class='rp-tbl'><tr><th></th><th>DME Predicted</th><th>With Total Sleep</th><th>Gain</th></tr>"+comp+"</table>"+
+    "<div class='rp-sec'>Incremental Revenue Per Set-Up Patient</div><table class='rp-tbl'><tr><th></th><th>DME</th><th>With Total Sleep</th><th>Increase / Pt</th></tr>"+rev+"</table>"+
+    "<div class='rp-sec'>Per-Patient Economics &amp; Annual Impact</div><table class='rp-kv'>"+econ+"</table>"+
+    "<div class='rp-sec'>Bottom Line</div>"+
+    "<div class='rp-metrics'>"+
+      "<div class='rp-metric'><div class='l'>Gross Profit Gain / Pt</div><div class='n'>"+g("s_gp")+"</div><div class='s'>on increased revenue</div></div>"+
+      "<div class='rp-metric'><div class='l'>ROI</div><div class='n'>"+g("s_roi")+"</div><div class='s'>gross profit &divide; net cost</div></div>"+
+      "<div class='rp-metric hl'><div class='l'>Increase in Net Profit &mdash; Year 1</div><div class='n'>"+g("s_np")+"</div><div class='s'>"+g("s_npm")+"</div></div>"+
+    "</div>"+
+    "<div class='rp-foot'>"+foot+"</div>";
+}
+
+function exportPDF(){
+  buildReport();
+  window.print();
+}
+
+function saveFile(){
+  var name=($("i_client").value||"").trim();
+  // bake current field values into the markup so they persist on reopen
+  document.querySelectorAll('input').forEach(function(inp){
+    if(inp.type==='text'||inp.type==='number'){ inp.setAttribute('value', inp.value); }
+  });
+  // don't carry a stale print report into the saved copy
+  $("report").innerHTML='';
+  var html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+  // bake current toggle selections into the script defaults
+  html=html.replace(/var mode = '[^']*';/, "var mode = '"+mode+"';")
+           .replace(/var src = '[^']*';/, "var src = '"+src+"';")
+           .replace(/var period = '[^']*';/, "var period = '"+period+"';");
+  var fname='Total Sleep Services ROI'+(name?' - '+name:'')+'.html';
+  fname=fname.replace(/[\\/:*?"<>|]+/g,' ').replace(/\s+/g,' ').trim();
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=fname;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+}
+
+function setMode(m){
+  mode=m;
+  $("tg_out").className = m==='out'?'on':'';
+  $("tg_fte").className = m==='fte'?'on':'';
+  $("grp_out").style.display = m==='out'?'':'none';
+  $("grp_fte").style.display = m==='fte'?'':'none';
+  $("modeNote").textContent = m==='out'
+    ? "Cost charged per patient for the first 90 days."
+    : "Monthly staffing cost \u00F7 monthly setups = cost per patient.";
+  run();
+}
+
+function setPeriod(p){
+  period=p;
+  $("tg_mo").className = p==='mo'?'on':'';
+  $("tg_yr").className = p==='yr'?'on':'';
+  run();
+}
+
+function run(){
+  var c90 = cap((parseFloat($("i_c90").value)||80)/100, 0.99);
+  var R   = parseFloat($("i_rr").value)||0;
+  var SU  = parseFloat($("i_su").value)||0;
+  var MR  = parseFloat($("i_mr").value)||0;
+  var lift= 1 + (parseFloat($("a_gain").value)||0)/100;
+  var gm  = (parseFloat($("a_gm").value)||50)/100;
+  var C1  = parseFloat($("a_c1").value)||0;
+  var C2  = parseFloat($("a_c2").value)||0;
+
+  var annualPts = SU*12;
+
+  // staffing cost per patient today
+  var staffPP;
+  if(mode==='out'){ staffPP = parseFloat($("i_spp").value)||0; }
+  else {
+    var fte = parseFloat($("i_fte").value)||0;
+    var monthlyFte = period==='yr' ? fte/12 : fte;
+    staffPP = SU>0 ? monthlyFte/SU : 0;
+    $("ftePP").textContent = period==='yr'
+      ? fm(fte)+"/yr = "+fm(monthlyFte)+"/mo \u2192 "+fm2(staffPP)+"/patient"
+      : "= "+fm2(staffPP)+" per patient";
+  }
+
+  // Sanusom compliance curve
+  var s90 = cap(c90*lift, 0.99);
+
+  // DME predicted compliance: from client's ordering rates, or industry averages scaled to their 90-day compliance
+  var PF = parseFloat($("a_pf").value)||0.89;
+  var dPred=[], sComp=[], dRev=[], sRev=[], incRev=[], ordRates=[];
+
+  if(src==='hist'){
+    ordRates = [
+      (parseFloat($("i_o1").value)||0)/100,
+      (parseFloat($("i_o2").value)||0)/100,
+      (parseFloat($("i_o3").value)||0)/100
+    ];
+    for(var i=0;i<3;i++){ dPred[i] = cap(PF>0 ? ordRates[i]/PF : 0, 0.99); }
+    $("pc1").textContent="\u2192 "+pc(dPred[0])+" predicted 180-day compliance";
+    $("pc2").textContent="\u2192 "+pc(dPred[1])+" predicted 270-day compliance";
+    $("pc3").textContent="\u2192 "+pc(dPred[2])+" predicted one-year compliance";
+  } else {
+    var kf = c90/IND_C90;                      // scale industry curve to this client's 90-day compliance
+    for(var i=0;i<3;i++){
+      dPred[i] = cap(Math.min(IND[i]*kf, c90), 0.99);
+      ordRates[i] = dPred[i]*PF;               // implied ordering rate for baseline resupply revenue
+    }
+    $("avgBox").innerHTML =
+      "Industry averages (55% / 46% / 42% at 73% compliance) scaled by "+(c90*100).toFixed(0)+"% &divide; 73%:<br>"+
+      "180-day <b>"+pc(dPred[0])+"</b> &nbsp;&middot;&nbsp; 270-day <b>"+pc(dPred[1])+"</b> &nbsp;&middot;&nbsp; One-year <b>"+pc(dPred[2])+"</b>";
+  }
+
+  for(var i=0;i<3;i++){
+    sComp[i] = cap(s90*SAN_RETAIN[i], 0.99);        // Sanusom compliance
+    dRev[i]  = ordRates[i]*R;                       // DME resupply revenue
+    incRev[i]= Math.max(sComp[i]-dPred[i],0)*R;     // increased resupply revenue
+    sRev[i]  = dRev[i]+incRev[i];
+  }
+
+  // machine revenue: allowable collected for a compliant patient, split into
+  // a guaranteed portion (through mo 3) and an at-risk portion (after mo 3).
+  // The compliance uplift applies only to the at-risk portion.
+  var atRisk = Math.min(Math.max((parseFloat($("a_risk").value)||0)/100,0),1);
+  var ratio  = c90>0 ? s90/c90 : 1;                      // compliance ratio (Sanusom 90d / DME 90d)
+  var mD = MR;                                           // baseline: full allowable, compliant patient
+  var mS = MR*((1-atRisk) + atRisk*ratio);               // guaranteed + lifted at-risk portion
+  var mG = mS-mD;                                         // = MR * atRisk * (ratio - 1)
+  $("mrNote").textContent = fm2(MR*atRisk)+" at-risk after mo 3";
+  $("mSplit").innerHTML = "<span style='font-size:11px;color:#94A3B8;'>"+fm2(MR)+" &times; "+Math.round(atRisk*100)+"% at-risk &times; ("+ratio.toFixed(3)+" &minus; 1)</span>";
+
+  var totInc = incRev[0]+incRev[1]+incRev[2]+mG;
+  var gp = totInc*gm;
+
+  // costs
+  var cs1=C1, cs2=C2*s90, cnet=cs1+cs2-staffPP;
+
+  // ROI + net profit
+  var roiTxt = cnet>0 ? (gp/cnet).toFixed(2)+"x" : "Immediate";
+  var np = (gp-cnet)*annualPts;
+
+  // ---- render ----
+  $("c90d").textContent=pc(c90); $("c90s").textContent=pc(s90); $("c90g").textContent="+"+((s90-c90)*100).toFixed(1)+" pts";
+  var ids=[["1",0],["2",1],["3",2]];
+  ids.forEach(function(p){
+    var i=p[1];
+    // compliance curve table (percentages)
+    var g=(sComp[i]-dPred[i])*100;
+    $("cc"+p[0]+"d").textContent=pc(dPred[i]);
+    $("cc"+p[0]+"s").textContent=pc(sComp[i]);
+    $("cc"+p[0]+"g").textContent=(g>=0?"+":"")+g.toFixed(1)+" pts";
+    // revenue build table (dollars)
+    $("r"+p[0]+"d").textContent=fm(dRev[i]);
+    $("r"+p[0]+"s").textContent=fm(sRev[i]);
+    $("r"+p[0]+"g").textContent="+"+fm(incRev[i]);
+  });
+  $("m_d").textContent=fm(mD); $("m_s").textContent=fm(mS); $("m_g").textContent="+"+fm(mG);
+  $("totg").textContent="+"+fm(totInc);
+  $("gmLbl").innerHTML="<span style='font-size:11px;color:#94A3B8;'>at "+Math.round(gm*100)+"%</span>";
+  $("gpg").textContent="+"+fm(gp);
+
+  $("cs1").textContent=fm2(cs1);
+  $("cs2").textContent=fm2(cs2);
+  $("csNote").textContent="($"+C2+" \u00D7 "+pc(s90)+" compliance)";
+  $("cst").textContent="("+fm2(staffPP)+")";
+  $("cnet").textContent=fm2(cnet);
+
+  $("vm").textContent=SU.toLocaleString();
+  $("vy").textContent=annualPts.toLocaleString();
+  $("vgp").textContent=fM(gp*annualPts);
+  $("vnc").textContent=fM(cnet*annualPts);
+
+  $("s_gp").textContent=fm2(gp);
+  $("s_roi").textContent=roiTxt;
+  $("s_np").textContent=fM(np);
+  $("s_npm").textContent=fM(np/12)+" / month \u00B7 "+annualPts.toLocaleString()+" patients";
+  $("npBox").className = np<0 ? "ab neg" : "ab";
+}
+
+["i_c90","i_rr","i_su","i_mr","i_o1","i_o2","i_o3","i_spp","i_fte","a_gain","a_gm","a_c1","a_c2","a_risk","a_pf"].forEach(function(id){$(id).oninput=run;});
+run();
+</script>
+</body></html>
