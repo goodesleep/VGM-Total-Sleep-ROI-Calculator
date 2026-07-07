@@ -159,8 +159,8 @@ details.assump .agrid .inp label{flex-grow:1;}
     <div class="sec-lbl">Client Inputs</div>
     <div class="inputs">
       <div class="inp"><label>90-Day Compliance % <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#94A3B8;">(excluding RePAPs)</span></label><div class="iw"><input type="number" id="i_c90" value="73" min="1" max="99" step="0.1"><span class="sfx">%</span></div></div>
-      <div class="inp"><label>Avg. Resupply Revenue Per Order</label><div class="iw"><span class="pfx">$</span><input type="number" id="i_rr" value="220" class="has-pfx"></div></div>
       <div class="inp"><label>Avg. Setups Per Month</label><input type="number" id="i_su" value="250"></div>
+      <div class="inp"><label>Avg. Revenue per Resupply Order</label><div class="iw"><span class="pfx">$</span><input type="number" id="i_rr" value="220" class="has-pfx"></div></div>
       <div class="inp"><label>Avg. Revenue Per Machine <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#94A3B8;">(compliant pt, full term)</span></label><div class="iw"><span class="pfx">$</span><input type="number" id="i_mr" value="950" class="has-pfx"></div><div class="computed" id="mrNote" style="font-size:10px;color:#94A3B8;font-weight:600;"></div></div>
     </div>
 
@@ -237,7 +237,7 @@ details.assump .agrid .inp label{flex-grow:1;}
 
     <div class="tbl">
       <div class="t-hdr">Incremental Revenue Per Set-Up Patient <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#94A3B8;">&mdash; driven by the compliance curve above</span></div>
-      <div class="t-cols"><div></div><div>DME</div><div>With Total Sleep</div><div>Increase / Pt</div></div>
+      <div class="t-cols"><div></div><div>DME Predicted</div><div>With Total Sleep</div><div>Increase / Pt</div></div>
       <div class="t-row hi"><div class="lb">Machine Revenue <span id="mSplit"></span></div><div class="v" id="m_d"></div><div class="vs" id="m_s"></div><div class="vg" id="m_g"></div></div>
       <div class="t-row"><div class="lb">Resupply Rev &mdash; Mo 4&ndash;6</div><div class="v" id="r1d"></div><div class="vs" id="r1s"></div><div class="vg" id="r1g"></div></div>
       <div class="t-row"><div class="lb">Resupply Rev &mdash; Mo 7&ndash;9</div><div class="v" id="r2d"></div><div class="vs" id="r2s"></div><div class="vg" id="r2g"></div></div>
@@ -337,8 +337,8 @@ function buildReport(){
 
   var inputs =
     row("90-Day Compliance (excl. RePAPs)", v("i_c90")+"%")+
-    row("Avg. Resupply Revenue / Order", "$"+v("i_rr"))+
     row("Avg. Setups / Month", v("i_su"))+
+    row("Avg. Revenue / Resupply Order", "$"+v("i_rr"))+
     row("Avg. Revenue / Machine", "$"+v("i_mr"))+
     row("Compliance Data Source", srcTxt)+
     row("Current Compliance Staffing", staffTxt);
@@ -375,7 +375,7 @@ function buildReport(){
     "</div>"+
     "<div class='rp-sec'>Client Inputs</div><table class='rp-kv'>"+inputs+"</table>"+
     "<div class='rp-sec'>Compliance Curve</div><table class='rp-tbl'><tr><th></th><th>DME Predicted</th><th>With Total Sleep</th><th>Gain</th></tr>"+comp+"</table>"+
-    "<div class='rp-sec'>Incremental Revenue Per Set-Up Patient</div><table class='rp-tbl'><tr><th></th><th>DME</th><th>With Total Sleep</th><th>Increase / Pt</th></tr>"+rev+"</table>"+
+    "<div class='rp-sec'>Incremental Revenue Per Set-Up Patient</div><table class='rp-tbl'><tr><th></th><th>DME Predicted</th><th>With Total Sleep</th><th>Increase / Pt</th></tr>"+rev+"</table>"+
     "<div class='rp-sec'>Per-Patient Economics &amp; Annual Impact</div><table class='rp-kv'>"+econ+"</table>"+
     "<div class='rp-sec'>Bottom Line</div>"+
     "<div class='rp-metrics'>"+
